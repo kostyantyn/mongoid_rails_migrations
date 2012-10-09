@@ -3,4 +3,4 @@
 .rvmrc
 .idea
 log/
-.ruby-version
+.ruby-version.rvmrc

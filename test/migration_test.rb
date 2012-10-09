@@ -121,21 +121,5 @@ module Mongoid
         Mongoid::Migrator.migrate(MIGRATIONS_ROOT + "/valid", 500)
       end
     end
-
-    def test_default_state_of_timestamped_migrations
-      assert Mongoid.configure.timestamped_migrations, "Mongoid.configure.timestamped_migrations should default to true"
-    end
-
-    def test_timestamped_migrations_generates_non_sequential_next_number
-      next_number = Mongoid::Generators::Base.next_migration_number(MIGRATIONS_ROOT + "/valid")
-      assert_not_equal "20100513063903", next_number
-    end
-
-    def test_turning_off_timestamped_migrations
-      Mongoid.configure.timestamped_migrations = false
-      next_number = Mongoid::Generators::Base.next_migration_number(MIGRATIONS_ROOT + "/valid")
-      assert_equal "20100513063903", next_number
-    end
-
   end
 end

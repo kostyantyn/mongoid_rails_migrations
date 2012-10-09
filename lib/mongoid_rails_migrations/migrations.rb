@@ -29,36 +29,6 @@ module Mongoid #:nodoc
     end
   end
 
-  # Data migrations can manage the modification of data. It's a solution to the common problem of modifying
-  # data between code revisions within a document oriented database.
-  # 
-  # Example of simple migration for a system dependency:
-  # 
-  #   class AddBaselineSurveySchema < Mongoid::Migration
-  #     def self.up
-  #       SurveySchema.create(:label => 'Baseline Survey')
-  #     end
-  #     
-  #     def self.down
-  #       SurveySchema.where(:label => 'Baseline Survey').first.destroy
-  #     end
-  #   end
-  #
-  # == Timestamped Migrations
-  #
-  # By default, Rails generates migrations that look like:
-  #
-  #    20080717013526_your_migration_name.rb
-  #
-  # The prefix is a generation timestamp (in UTC).
-  #
-  # If you'd prefer to use numeric prefixes, you can turn timestamped migrations
-  # off by setting:
-  #
-  #    Mongoid.config.timestamped_migrations = false
-  #
-  # In environment.rb.
-  #
   class Migration
     @@verbose = true
     cattr_accessor :verbose
@@ -295,7 +265,7 @@ module Mongoid #:nodoc
       runnable.pop if down? && !target.nil?
 
       runnable.each do |migration|
-        Rails.logger.info "Migrating to #{migration.name} (#{migration.version})" if Rails.logger
+        Logger.new(STDOUT).info "Migrating to #{migration.name} (#{migration.version})"
 
         # On our way up, we skip migrating the ones we've already migrated
         next if up? && migrated.include?(migration.version.to_i)
@@ -327,6 +297,8 @@ module Mongoid #:nodoc
     def migrations
       @migrations ||= begin
         files = Dir["#{@migrations_path}/[0-9]*_*.rb"]
+
+        p @migrations_path
 
         migrations = files.inject([]) do |klasses, file|
           version, name = file.scan(/([0-9]+)_([_a-z0-9]*).rb/).first
