@@ -26,9 +26,9 @@ module MongoidRailsMigrations
 
     def content
       "class #{class_name.camelize} < Mongoid::Migration\n" \
-      "  def up\n" \
+      "  def self.up\n" \
       "  end\n\n" \
-      "  def down\n" \
+      "  def self.down\n" \
       "  end\n" \
       "end"
     end

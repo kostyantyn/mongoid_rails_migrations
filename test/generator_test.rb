@@ -16,9 +16,9 @@ class MongoidRailsMigrationsGeneratorTest < ActiveSupport::TestCase
 
   def test_content
     content = "class MyClassName < Mongoid::Migration\n" \
-              "  def up\n" \
+              "  def self.up\n" \
               "  end\n\n" \
-              "  def down\n" \
+              "  def self.down\n" \
               "  end\n" \
               "end"
 

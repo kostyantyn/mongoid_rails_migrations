@@ -7,7 +7,7 @@ namespace :db do
     migration = ENV['migration']
     raise 'Migration name cannot be blank' if migration.blank?
 
-    generator = MongoidRailsMigrations::Generator.new(migration, 'db/migrations/')
+    generator = MongoidRailsMigrations::Generator.new(migration, 'db/migrations')
     migration_file = generator.create
     Logger.new(STDOUT).info(%(Migration file was created in the following directory "#{migration_file}"))
   end
@@ -20,7 +20,7 @@ namespace :db do
   desc "Migrate the database through scripts in db/migrations. Target specific version with VERSION=x. Turn off output with VERBOSE=false."
   task migrate: :environment do
     Mongoid::Migration.verbose = ENV['VERBOSE'] ? ENV['VERBOSE'] == 'true' : true
-    Mongoid::Migrator.migrate('db/migrations/', ENV['VERSION'] ? ENV['VERSION'].to_i : nil)
+    Mongoid::Migrator.migrate('db/migrations', ENV['VERSION'] ? ENV['VERSION'].to_i : nil)
   end
 
   namespace :migrate do
@@ -43,20 +43,20 @@ namespace :db do
     task up: :environment do
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
-      Mongoid::Migrator.run(:up, 'db/migrations/', version)
+      Mongoid::Migrator.run(:up, 'db/migrations', version)
     end
 
     desc 'Runs the "down" for a given migration VERSION.'
     task down: :environment do
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
-      Mongoid::Migrator.run(:down, 'db/migrations/', version)
+      Mongoid::Migrator.run(:down, 'db/migrations', version)
     end
   end
 
   desc 'Rolls the database back to the previous migration. Specify the number of steps with STEP=n'
   task rollback: :environment do
     step = ENV['STEP'] ? ENV['STEP'].to_i : 1
-    Mongoid::Migrator.rollback('db/migrations/', step)
+    Mongoid::Migrator.rollback('db/migrations', step)
   end
 end
